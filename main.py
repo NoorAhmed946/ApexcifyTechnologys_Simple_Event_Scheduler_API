@@ -35,3 +35,18 @@ def create_event(event: Event):
     
     events_db.append(event)
     return {"message": "Event added successfully", "event": event}
+
+@app.delete("/events/{event_id}")
+def delete_event(event_id: int):
+    global events_db
+    events_db = [e for e in events_db if e.id != event_id]
+    return {"message": "Event deleted successfully"}
+
+@app.put("/events/{event_id}")
+def update_event(event_id: int, updated_event: Event):
+    for index, event in enumerate(events_db):
+        if event.id == event_id:
+            events_db[index] = updated_event
+            return {"message": "Event updated successfully", "event": updated_event}
+    
+    raise HTTPException(status_code=404, detail="Event not found")
